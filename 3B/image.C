@@ -1,0 +1,51 @@
+#include <stdlib.h>
+#include <cstring>
+#include <image.h>
+
+
+Pixel::Pixel(unsigned char R_in, unsigned char G_in, unsigned char B_in)
+{
+
+  R = R_in;
+  G = G_in;
+  B = B_in;
+  
+};
+
+int Pixel::compare(Pixel &other){
+
+  if (R == other.R && G == other.G && B == other.B)
+    return 1;
+  else
+    return 0;
+}
+
+
+Image::Image(){};
+  
+Image::Image(int h, int w, int mv, Pixel *d)
+{  
+  height = h;
+  width = w;
+  max_val = mv;
+  data = d;
+};
+
+Image::Image(Image *img)
+{
+
+  height = img -> height;
+  width = img -> width;
+  max_val = img -> max_val;
+  
+  Pixel *buffer = (Pixel*) malloc(width*height);
+  memcpy(buffer, img -> data, height*width*3);
+  
+  data = buffer;
+};  
+
+void Image::ResetSize(int h, int w)
+{
+  height = h;
+  width = w;
+}

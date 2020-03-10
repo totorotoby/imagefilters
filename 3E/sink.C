@@ -1,0 +1,10 @@
+#include<sink.h>
+#include<stdio.h>
+#include <iostream>
+
+using namespace std;
+
+void Sink::SetInput(Image *to_set){
+  img1 = to_set;
+}
+void Sink::SetInput2(Image *to_set){img2 = to_set;}

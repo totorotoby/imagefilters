@@ -1,0 +1,165 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <image.h>
+
+void ReadImage(char *filename, Image &new_image)
+{
+
+  FILE *f_in;
+  char magic_num[128];
+  int width, height, max_val;
+  unsigned char *buffer;
+  Pixel *pixels;
+  
+  //opens file stream
+  f_in = fopen(filename, "r");
+  
+  if (f_in == NULL)
+    {
+      printf("Unable to open file \"%s\"", filename);
+    }
+  //read header into variables
+  fscanf(f_in, "%s\n%d %d\n%d\n", magic_num, &width, &height, &max_val);
+  // copy data new image
+  
+  if (strcmp(magic_num,"P6") != 0)
+    {
+      printf("This program won't work since the file being read in isn't a pnm.\n");
+      exit(1);
+    }
+  
+  /*
+  read image pixel by pixel into array.
+  each pixel has 3 bytes assosated with it for r ,g ,b
+  so we need each row to be 3 times as long.
+  */
+
+  /*   
+  Sanity check that height*width*3 is the number of bytes to the end of file.
+
+  long s_len = ftell(f_in);
+  fseek(f_in, 0, SEEK_END);
+  long e_len = ftell(f_in);
+  long length = e_len - s_len;
+  fseek(f_in, s_len, SEEK_SET);
+  printf("%ld, %d", length, height*width*3);
+  */
+
+  buffer = (unsigned char*) malloc(width*height*3*sizeof(unsigned char));
+  fread(buffer, sizeof(unsigned char), width*height*3, f_in);
+  pixels = (Pixel*) malloc(width*height*sizeof(Pixel));
+
+
+  for (int i = 0 ; i < width*height ; i++)
+    {
+      pixels[i].R = buffer[3*i];
+      pixels[i].G = buffer[3*i+1];
+      pixels[i].B = buffer[3*i+2];
+    }
+
+  new_image = new Image(height, width, max_val, pixels);
+  
+}
+
+void WriteImage(char *filename, Image &img)
+{
+
+ FILE *f_out = fopen(filename, "w");
+ fprintf(f_out, "P6\n%d %d\n%d\n", img.width, img.height, img.max_val);
+ 
+ for (int i = 0 ; i < img.height*img.width ; i++)
+   {
+     fprintf(f_out, "%c", img.data[i].R);
+     fprintf(f_out, "%c", img.data[i].G);
+     fprintf(f_out, "%c", img.data[i].B);
+   }
+}
+
+
+void HalfSize(Image &input, Image &output)
+{
+
+  output.ResetSize(input.height/2, input.width/2);
+  
+  //might be wrong because we are getting rid of half the pixels
+  output.max_val = input.max_val;
+  
+  output.data = (Pixel *) malloc(output.width*output.height*sizeof(Pixel));
+
+  for (int i = 0 ; i < output.height ; i++)
+    {
+      for (int j = 0 ; j < output.width ; j++)
+	{
+	  output.data[i*output.width + j] = input.data[2*i*input.width + j*2];
+	}
+    }
+}
+
+
+void LeftRightCombine(Image &leftInput, Image &rightInput, Image &output){
+
+  output.ResetSize(leftInput.height, leftInput.width*2);
+  output.max_val = leftInput.max_val;
+
+  output.data = (Pixel *) malloc(output.height * output.width * sizeof(Pixel));
+
+  for (int i = 0 ; i < output.height ; i++)
+    {
+    for (int j = 0 ; j < output.width ; j++)
+      {
+	if (j < leftInput.width)
+	  {
+	    output.data[i*output.width + j] = leftInput.data[i*leftInput.width + j];
+	  }
+	else
+	  {
+	    output.data[i*output.width + j] = rightInput.data[i*rightInput.width
+							      + (j - leftInput.width)];
+	  }
+      }
+    }
+}
+
+void TopBottomCombine(Image &topInput, Image &bottomInput, Image &output){
+
+  output.ResetSize(topInput.height*2, topInput.width);
+  output.max_val = topInput.max_val;
+
+  output.data = (Pixel *) malloc(output.height * output.width * sizeof(Pixel));
+
+  for (int i = 0 ; i < output.height ; i++)
+    {
+      for ( int j = 0 ; j < output.width ; j++)
+	{
+	  if (i < topInput.height)
+	    {
+	      output.data[i*output.width + j] = topInput.data[i*topInput.width + j];
+	    }
+	  else
+	    {
+	      output.data[i*output.width + j] = bottomInput.data[(i*bottomInput.width) -
+								 (topInput.width * topInput.height)
+								 + j];
+	    }
+	}
+    }
+}
+
+
+void checkImage(Image &test, Image &myImage)
+{
+  
+  if (test.width != myImage.width || test.height != myImage.height)
+    {
+      printf("test image width: %d\nmy image width: %d\ntest image height: %d\nmy image height: %d\n",
+	     test.width, myImage.width, test.height, myImage.height);
+      exit(0);
+    }
+
+  for (int i = 0 ; test.height ; i++)
+    {
+      for int j = 0 ; test.width ; j++)
+  
+  
+}

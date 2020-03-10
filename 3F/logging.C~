@@ -1,0 +1,15 @@
+#include <fstream>
+#include <stdio.h>
+#include <logging.h>
+
+using namespace std;
+
+void Logger::LogEvent(const char *event)
+{
+  fprintf(logger, "%s", event);
+}
+
+void Logger::Finalize()
+{
+  fclose(logger);
+}
