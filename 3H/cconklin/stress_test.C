@@ -36,14 +36,14 @@ int main(int argc, char *argv[])
     LRCombine lr1;
 
     s1.SetInput(reader.GetOutput());
-	tb1.SetInput(s1.GetOutput());
-	tb1.SetInput2(s1.GetOutput());
-	lr1.SetInput(tb1.GetOutput());
-	lr1.SetInput2(tb1.GetOutput());
+    tb1.SetInput(s1.GetOutput());
+    tb1.SetInput2(s1.GetOutput());
+    lr1.SetInput(tb1.GetOutput());
+    lr1.SetInput2(tb1.GetOutput());
 
 	Shrinker s2;
-    TBCombine tb2;
-    LRCombine lr2;
+	TBCombine tb2;
+	LRCombine lr2;
 
     s2.SetInput(lr1.GetOutput());
 	tb2.SetInput(s2.GetOutput());

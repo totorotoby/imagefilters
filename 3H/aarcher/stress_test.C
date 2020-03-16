@@ -41,7 +41,8 @@ int main(int argc, char *argv[])
     b1.SetInput(reader.GetOutput());
     b1.SetInput2(red.GetOutput());
     b1.SetFactor(.60);
-  
+    
+    
     Blender b2; //gren hank
     b2.SetInput(reader.GetOutput());
     b2.SetInput2(green.GetOutput());
@@ -56,10 +57,12 @@ int main(int argc, char *argv[])
     lr.SetInput(b1.GetOutput());
     lr.SetInput2(b2.GetOutput());
 
+    
     LRCombine lr1;// (red + green) + yellow hank
     lr1.SetInput(lr.GetOutput());
     lr1.SetInput2(b3.GetOutput());
 
+    
     Blender b4; //blue hankd
     b4.SetInput(reader.GetOutput());
     b4.SetInput2(blue.GetOutput());
@@ -74,7 +77,7 @@ int main(int argc, char *argv[])
     LRCombine lr2;
     lr2.SetInput(b4.GetOutput());
     lr2.SetInput2(b3.GetOutput());
-    
+ 
     LRCombine lr3;
     lr3.SetInput(lr2.GetOutput());
     lr3.SetInput2(b5.GetOutput());
@@ -110,7 +113,7 @@ int main(int argc, char *argv[])
     TBCombine tb2;
     tb2.SetInput(tb.GetOutput());
     tb2.SetInput2(lr5.GetOutput());    
-
+    
 
     
 
@@ -131,7 +134,7 @@ int main(int argc, char *argv[])
     }
     catch (DataFlowException &)
     {
-        ofstream ofile("my_exception");
+      ofstream ofile("my_exception");
         if (ofile.fail())
         {
              cerr << "Something is wrong ... can't open my_exception"

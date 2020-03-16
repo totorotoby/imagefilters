@@ -87,23 +87,24 @@ void LRCombine::Execute(){
       throw e;
     }
   
-    image->ResetSize(img1->Height(), img1->Width()*2);
-    image->setMaxVal(img1->Max_Val());
-    
-    Pixel *to_input = new Pixel[image->Height()*image->Width()];
-    
+  image->ResetSize(img1->Height(), img1->Width() + img2->Width());
+  image->setMaxVal(img1->Max_Val());
+  int img2_count = 0;
+  
+  Pixel *to_input = new Pixel[image->Height()*image->Width()];
+  
     for (int i = 0 ; i < image->Height() ; i++)
       {
 	for (int j = 0 ; j < image->Width() ; j++)
 	  {
 	    if (j < img1 -> Width())
 	      {
-		to_input[i*image->Width() + j] = img1->Data()[i*img1->Width() + j];
+		to_input[i*image->Width() + j] = img1->Data()[i * img1 -> Width() + j];
 	      }
 	    else
 	      {
-		to_input[i*image->Width() + j] = img2->Data()[i*img2->Width()
-							      + (j - img2->Width())];
+		to_input[i*image->Width() + j] = img2->Data()[img2_count];
+		img2_count++;
 	      }
 	  }
       }
@@ -132,11 +133,13 @@ void TBCombine::Execute(){
       throw e;
     }
   
-  image->ResetSize(img1->Height()*2, img1->Width());
+  image->ResetSize(img1->Height() + img2->Height(), img1->Width());
   
   image->setMaxVal(img1->Max_Val());
   
     Pixel *to_input = new Pixel[image->Height()*image->Width()];
+
+    int img2_count = 0;
     
     for (int i = 0 ; i < image->Height() ; i++)
       {
@@ -148,9 +151,8 @@ void TBCombine::Execute(){
 	      }
 	    else
 	      {
-		to_input[i*image->Width() + j] = img2->Data()[i*img2->Width()
-							      -(img2->Height()*img2->Width())
-							      + j];
+		to_input[i*image->Width() + j] = img2->Data()[img2_count];
+		img2_count++;
 	      }
 	  }
       }
@@ -176,14 +178,32 @@ void Blender::Execute()
       DataFlowException e(SourceName(), msg);
       throw e;
     }
-  int index;
-  int red;
-  int green;
-  int blue;
-  image->ResetSize(img1->Height(), img1->Width());
-  image->setMaxVal(img1->Max_Val());
+
+  if (img1 -> Width() != img2 -> Width())
+    {
+      char msg[1024];
+      sprintf(msg, "(%s): Widths must match: %d %d",
+	      SourceName(), img1 -> Width(), img2 -> Width());
+      DataFlowException e(SourceName(), msg);
+      throw e;
+    }
+
+  if (img1 -> Height() != img2 -> Height())
+    {
+      char msg[1024];
+      sprintf(msg, "(%s): Heights must match: %d %d",
+	      SourceName(), img1 -> Height(), img2 -> Height());
+      DataFlowException e(SourceName(), msg);
+      throw e;
+    }
   
-  int max_value = 0;
+  int index;
+  int red = 0;
+  int green = 0;
+  int blue = 0;
+  image->ResetSize(img1->Height(), img1->Width());
+  image->setMaxVal(255);
+  
   Pixel *to_input = new Pixel[image->Height()*image->Width()];
   
   for (int i = 0 ; i < image->Height() ; i++)
@@ -194,17 +214,11 @@ void Blender::Execute()
 	    red = img1->Data()[index].R * (*factor) + img2->Data()[index].R * (1-*factor);
 	    green = img1->Data()[index].G * (*factor) + img2->Data()[index].G * (1-*factor);
 	    blue = img1->Data()[index].B * (*factor) + img2->Data()[index].B * (1-*factor);
-	    
-	    if (red > max_value){max_value = red;}
-	    if (red > max_value){max_value = green;}
-	    if (red > max_value){max_value = blue;}
-	    
 	    to_input[index].R = red;
 	    to_input[index].G = green;
 	    to_input[index].B = blue;
 	  }
     }
-  image->setMaxVal(img1->Max_Val());
   image->setData(to_input);
 }
 

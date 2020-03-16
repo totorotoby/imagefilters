@@ -41,7 +41,6 @@ Image::Image(){
 
 Image::Image(Source *p)
 {
-  cerr << "constructing in image" << endl;
   data = NULL;
   updated = 0;
   parent = p;
@@ -87,7 +86,6 @@ void Image::setMaxVal(int maxVal){max_val = maxVal;}
 void Image::setData(Pixel *Data){
   if (data != NULL)
     {
-      cerr << "dumb trevor" << endl;
       delete []data;
     }
   data = Data;
@@ -107,11 +105,9 @@ void Image::Update(){
   
   if (parent->isUpdated() == 0)
     {
-      //cout << "in image going up" << endl;
       parent->Update();
     }
   if (parent->isUpdated() == 1){
-    //cout << "in image going down" << endl;
     char msg[128];
     sprintf(msg, "%s: about to execute", parent->SourceName());
     Logger::LogEvent(msg);

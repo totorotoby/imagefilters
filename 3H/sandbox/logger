@@ -1,0 +1,29 @@
+Entered program from jrodrig2
+
+Blender: about to update input1
+TBCombine: about to update input1
+LRCombine: about to update input1
+Shrinker: about to update input1
+TBCombine: about to update input2
+LRCombine: about to update input1
+Shrinker: about to update input1
+PNMreader: about to execute
+PNMreader: done executing
+PNMreader: about to execute
+PNMreader: done executing
+Shrinker: done updating input1
+Shrinker: about to execute
+Shrinker: done executing
+LRCombine: done updating input1
+LRCombine: about to update input2
+Shrinker: about to execute
+Shrinker: done executing
+LRCombine: done updating input2
+LRCombine: about to execute
+LRCombine: done executing
+TBCombine: done updating input2
+TBCombine: about to execute
+TBCombine: (TBCombine): Must have two input images to combine
+Caught exception!
+Blender: about to execute
+Blender: (Blender): Widths must match: 0 1786

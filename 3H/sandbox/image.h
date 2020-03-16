@@ -33,7 +33,6 @@ public:
   Image(int h, int w);
   Image(Image *img);
   ~Image(){
-    cerr << "In image destructor" << endl;
     delete []data;}
   void ResetSize(int h, int w);
   void setMaxVal(int maxVal);
