@@ -10,9 +10,9 @@ void Logger::LogEvent(const char *event)
 {
   if (logger == NULL)
     {
-      logger = fopen(...)
+      logger = fopen("logger", "w");
     }
-  fprintf(logger, "%s", event);
+  fprintf(logger, "%s\n", event);
 }
 
 void Logger::Finalize()

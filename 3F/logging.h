@@ -7,18 +7,6 @@
 
 using std::exception;
 
-
-class DataFlowException : public exception
-{
-public:
-  DataFlowException(const char *type, const char *error);
-  virtual const char  *what() const throw() { return msg; };
-  
-protected:
-  char msg[1024];
-};
-
-
 class Logger
 {
 public:
@@ -29,6 +17,22 @@ private:
   static FILE *logger;
   
 };
+
+class DataFlowException : public exception
+{
+protected:
+  char msg[1024];
+public:
+  DataFlowException(const char *type, const char *error)
+  {
+    sprintf(msg, "%s: %s", type, error);
+    Logger::LogEvent(msg);
+  };
+  virtual const char  *what() const throw() { return msg; };
+  
+};
+
+
 
 
 #endif

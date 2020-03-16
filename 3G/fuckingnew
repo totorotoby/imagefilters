@@ -1,0 +1,41 @@
+Binary file blur.png matches
+compare.C:  Image *error = new Image();
+compare.C:  Pixel *to_show = new Pixel[error->Height() * error->Width()];
+filter.C:  Pixel *to_input = new Pixel[output_height*output_width];
+filter.C:    Pixel *to_input = new Pixel[image->Height()*image->Width()];
+filter.C:    Pixel *to_input = new Pixel[image->Height()*image->Width()];
+filter.C:  Pixel *to_input = new Pixel[image->Height()*image->Width()];
+filter.C:  Pixel *to_input = new Pixel[image->Height()*image->Width()];
+filter.C:  Pixel *to_input = new Pixel[image->Height() * image->Width()];
+filter.C:    Pixel *to_input = new Pixel[image->Height() * image->Width()];
+filter.C:  image = new Image(this, height, width);
+filter.C:  name = new char[128];
+filter.C:  Pixel *to_input = new Pixel[image->Height() * image->Width()];
+filter.C:  Pixel *to_input = new Pixel[image->Height()*image->Width()];
+filter.C:  Pixel *to_input = new Pixel[image->Height()*image->Width()];
+filter.h:  Filter(){image = new Image(this);}
+filter.h:    name = new char[128];
+filter.h:    name = new char[128];
+filter.h:    name = new char[128];
+filter.h:    name = new char[128];
+filter.h:      factor = new double; 
+filter.h:    name = new char[128];
+filter.h:    name = new char[128];
+filter.h:    name = new char[128];
+filter.h:    name = new char[128];
+filter.h:    name = new char[128];
+Binary file filter.o matches
+image.C:  data = new Pixel[width*height];
+Binary file image.o matches
+Binary file logging.o matches
+main3E.C:  Image *error = new Image();
+main3E.C:  Pixel *to_show = new Pixel[error->Height() * error->Width()];
+Binary file main3G.o matches
+PNMreader.C:  image = new Image(this);
+PNMreader.C:  filename = new char[128];
+PNMreader.C:  name = new char[128];
+PNMreader.C:  buffer = new unsigned char[width*height*3];
+Binary file PNMreader.o matches
+Binary file PNMwriter.o matches
+Binary file sink.o matches
+Binary file source.o matches

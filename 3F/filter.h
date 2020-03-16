@@ -1,9 +1,10 @@
 #ifndef FILTER
 #define FILTER
-
 #include <source.h>
 #include <sink.h>
 #include <image.h>
+#include <typeinfo>
+#include <string.h>
 
 class Filter : public Source, public Sink{
 public:
@@ -15,7 +16,12 @@ public:
 class Shrinker : public Filter
 {
 public:
-  Shrinker() : Filter(){};
+  Shrinker() : Filter()
+  {
+    char s_name[128] = "Shrinker";
+    name = new char[strlen(s_name) + 1];
+    strcpy(name, s_name);
+  };
   virtual void Execute();
 };
 
@@ -23,14 +29,24 @@ public:
 class LRCombine : public Filter
 {
 public:
-  LRCombine() : Filter(){};
+  LRCombine() : Filter()
+  {
+    char s_name[128] = "LRCombine";
+    name = new char[strlen(s_name) + 1];
+    strcpy(name, s_name);
+    };
   virtual void Execute();
 };
 
 class TBCombine : public Filter
 {
 public:
-  TBCombine() : Filter(){};
+  TBCombine() : Filter()
+  {
+    char s_name[128] = "TBCombine";
+    name = new char[strlen(s_name) + 1];
+    strcpy(name, s_name);
+  };
   virtual void Execute();
 };
 
@@ -38,25 +54,36 @@ public:
 class Blender : public Filter
 {
 private:
-  float factor;
+  double *factor;
 public:
-  Blender() : Filter(){}
-  void SetFactor(float f){factor = f;}
+  Blender() : Filter()
+  {
+    factor = NULL;
+    char s_name[128] = "Blender";
+    name = new char[strlen(s_name) + 1];
+    strcpy(name, s_name);
+  };
+  void SetFactor(double f)
+  {
+    if (factor == NULL){
+      factor = new double; 
+    }
+    *factor = f;}
   virtual void Execute();
 };
+
 
 
 class Mirror : public Filter
 {
 
 public:
-  Mirror() : Filter(){}
+  Mirror() : Filter(){
+    char s_name[128] = "Mirror";
+    name = new char[strlen(s_name) + 1];
+    strcpy(name, s_name);
+  };
   virtual void Execute();
-
-
 };
-
-
-
 
 #endif

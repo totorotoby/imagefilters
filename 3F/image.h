@@ -19,9 +19,9 @@ private:
   int height;
   int width;
   int max_val;
-  Pixel *data = NULL;
-  Source *parent = NULL;
-  int updated = 0;
+  Pixel *data;
+  Source *parent;
+  int updated;
   
 public:
   Image();

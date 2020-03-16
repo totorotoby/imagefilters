@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include <logging.h>
 using namespace std;
 
 PNMreader::PNMreader(char *f)
@@ -11,6 +12,9 @@ PNMreader::PNMreader(char *f)
   image = new Image(this);
   filename = new char[strlen(f) + 1];
   strcpy(filename, f);
+  char s_name[128] = "PNMreader";
+  name = new char[strlen(s_name) + 1];
+  strcpy(name, s_name);
 };
 
 
@@ -32,15 +36,22 @@ void PNMreader::Execute()
   
   if (f_in == NULL)
     {
-      printf("Unable to open file \"%s\"", filename);
+      char msg[1024];
+      sprintf(msg, "(%s): Cannot find file: %s",
+	      SourceName(), filename);
+      DataFlowException e(SourceName(), msg);
+      throw e;
     }
   
   fscanf(f_in, "%s\n%d %d\n%d\n", magic_num, &width, &height, &max_val);
   
   if (strcmp(magic_num,"P6") != 0)
     {
-      printf("This program won't work since the file being read in isn't a pnm.\n");
-      exit(1);
+      char msg[1024];
+      sprintf(msg, "(%s): This file is not in PNM format",
+	      SourceName());
+      DataFlowException e(SourceName(), msg);
+      throw e;
     }
   
 
@@ -56,6 +67,7 @@ void PNMreader::Execute()
   
 void PNMreader::Update()
 {
+  //cout << "at the top of with PNMreader" << endl;
   updated = 1;
   image -> Update();
 }

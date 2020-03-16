@@ -3,7 +3,7 @@
 #include <image.h>
 #include <iostream>
 #include <source.h>
-
+#include <logging.h>
 using namespace std;
 
 Pixel::Pixel(){
@@ -33,7 +33,11 @@ int Pixel::compare(Pixel other){
 }
 
 
-Image::Image(){};
+Image::Image(){
+    data = NULL;
+    parent = NULL;
+    updated = 0;
+  };
 
 Image::Image(Source *p){
   parent = p;
@@ -113,12 +117,18 @@ void Image::Update(){
   
   if (parent->isUpdated() == 0)
     {
-      cout <<"in image update going up" << endl;
+      //cout << "in image going up" << endl;
       parent->Update();
     }
   if (parent->isUpdated() == 1){
-    cout << "in image update going down" << endl;
+    //cout << "in image going down" << endl;
+    char msg[128];
+    sprintf(msg, "%s: about to execute", parent->SourceName());
+    Logger::LogEvent(msg);
     parent->Execute();
+    char msg1[128];
+    sprintf(msg1, "%s: done executing", parent->SourceName());
+    Logger::LogEvent(msg1);
   }
 }
 

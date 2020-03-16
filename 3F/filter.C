@@ -2,6 +2,8 @@
 # include <sink.h>
 # include <iostream>
 # include <filter.h>
+# include <logging.h>
+# include <string>
 using namespace std;
 
 void Filter::Update(){
@@ -10,18 +12,38 @@ void Filter::Update(){
 
   if (img1 != NULL)
     {
-      cout << "in filter update going up" << endl;
+      char msg[128];
+      sprintf(msg, "%s: about to update input1", SourceName());
+      Logger::LogEvent(msg);
       img1 -> Update();
+      char msg1[128];
+      sprintf(msg1, "%s: done updating input1", SourceName());
+      Logger::LogEvent(msg1);
     }
 
   if (img2 != NULL)
     {
+      char msg[128];
+      sprintf(msg, "%s: about to update input2", SourceName());
+      Logger::LogEvent(msg);
       img2 -> Update();
+      char msg1[128];
+      sprintf(msg1, "%s: done updating input2", SourceName());
+      Logger::LogEvent(msg1);
     }
 }
 
 void Shrinker::Execute(){
 
+  if (img1 == NULL)
+    {
+      char msg[1024];
+      sprintf(msg, "(%s): No input image was ever set",
+	      SourceName());
+      DataFlowException e(SourceName(), msg);
+      throw e;
+    }
+  
   int input_height = img1->Height();
   int input_width = img1->Width();
   int max_val = img1->Max_Val();
@@ -48,8 +70,20 @@ void LRCombine::Execute(){
 
   if (img1 == NULL || img2 == NULL)
     {
-      cout << "Need to Images to Combine" << endl;
-      exit(0);
+      char msg[1024];
+      sprintf(msg, "(%s): Must have two input images to combine",
+	      SourceName());
+      DataFlowException e(SourceName(), msg);
+      throw e;
+    }
+
+  if (img1 -> Height() != img2 -> Height())
+    {
+      char msg[1024];
+      sprintf(msg, "(%s): Heights must match: %d %d",
+	      SourceName(), img1 -> Height(), img2 -> Height());
+      DataFlowException e(SourceName(), msg);
+      throw e;
     }
   
     image->ResetSize(img1->Height(), img1->Width()*2);
@@ -82,8 +116,20 @@ void TBCombine::Execute(){
 
   if (img1 == NULL || img2 == NULL)
     {
-      cout << "Need to Images to Combine" << endl;
-      exit(0);
+      char msg[1024];
+      sprintf(msg, "(%s): Must have two input images to combine",
+	      SourceName());
+      DataFlowException e(SourceName(), msg);
+      throw e;
+    }
+  
+  if (img1 -> Width() != img2 -> Width())
+    {
+      char msg[1024];
+      sprintf(msg, "(%s): Widths must match: %d %d",
+	      SourceName(), img1 -> Width(), img2 -> Width());
+      DataFlowException e(SourceName(), msg);
+      throw e;
     }
   
   image->ResetSize(img1->Height()*2, img1->Width());
@@ -114,7 +160,22 @@ void TBCombine::Execute(){
 
 void Blender::Execute()
 {
-  
+  if (factor == NULL)
+    {
+      char msg[1024];
+      sprintf(msg, "(%s): factor needs to be set.",
+	      SourceName());
+      DataFlowException e(SourceName(), msg);
+      throw e;
+    }
+  if (*factor < 0 || 1 < *factor)
+    {
+      char msg[1024];
+      sprintf(msg, "(%s): factor must be between 0 and 1: %f",
+	      SourceName(), *factor);
+      DataFlowException e(SourceName(), msg);
+      throw e;
+    }
   int index;
   image->ResetSize(img1->Height(), img1->Width());
   image->setMaxVal(img1->Max_Val());
@@ -127,9 +188,9 @@ void Blender::Execute()
       for (int j = 0 ; j < image->Width() ; j++)
 	  {
 	    index = i * image->Width() + j;
-	    int red = img1->Data()[index].R * factor + img2->Data()[index].R * (1-factor);
-	    int green = img1->Data()[index].G * factor + img2->Data()[index].G * (1-factor);
-	    int blue = img1->Data()[index].B * factor + img2->Data()[index].B * (1-factor);
+	    int red = img1->Data()[index].R * (*factor) + img2->Data()[index].R * (1-*factor);
+	    int green = img1->Data()[index].G * (*factor) + img2->Data()[index].G * (1-*factor);
+	    int blue = img1->Data()[index].B * (*factor) + img2->Data()[index].B * (1-*factor);
 	    
 	    if (red > max_value){max_value = red;}
 	    if (red > max_value){max_value = green;}
@@ -144,7 +205,7 @@ void Blender::Execute()
   image->setData(to_input);
 }
 
-
+/*
 void Mirror:Execute()
 {
 
@@ -165,3 +226,4 @@ void Mirror:Execute()
   image->setData(to_input);
   
 }
+*/

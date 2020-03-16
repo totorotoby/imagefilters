@@ -1,0 +1,7 @@
+filter.h:    delete factor;
+image.h:    delete data;}
+PNMreader.C:  delete []filename;
+PNMreader.C:  //delete image;
+PNMreader.C:  delete buffer;
+source.h:    delete image;
+source.h:    delete []name;
